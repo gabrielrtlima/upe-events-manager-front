@@ -18,23 +18,23 @@ export function ListEvents() {
   ]
   return (
     <>
-      <Table className="p-4" >
+      <Table className="p-4 w-full" >
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead className="hidden md:table-cell w-[100px]">ID</TableHead>
             <TableHead>Nome</TableHead>
-            <TableHead>Data inicial</TableHead>
-            <TableHead>Data final</TableHead>
+            <TableHead className="hidden md:table-cell">Data inicial</TableHead>
+            <TableHead className="hidden md:table-cell">Data final</TableHead>
             <TableHead className="text-center">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {eventos.map((evento, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">EV001</TableCell>
-              <TableCell>{evento.nome}</TableCell>
-              <TableCell>{evento.dataInicial}</TableCell>
-              <TableCell>{evento.dataFinal}</TableCell>
+              <TableCell className="hidden md:table-cell font-medium">EV001</TableCell>
+              <TableCell className="">{evento.nome}</TableCell>
+              <TableCell className="hidden md:table-cell">{evento.dataInicial}</TableCell>
+              <TableCell className="hidden md:table-cell">{evento.dataFinal}</TableCell>
               <TableCell className="flex justify-center gap-2">
                 <EyeOpenIcon className="cursor-pointer h-5 w-5" />
                 <UploadIcon className="cursor-pointer h-5 w-5" />

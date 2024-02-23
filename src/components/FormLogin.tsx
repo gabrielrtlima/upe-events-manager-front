@@ -92,7 +92,7 @@ export function FormLogin({ className }: FormLoginProps) {
           )}
         />
         <div className="flex justify-center">
-          <Button type="submit">Entrar</Button>
+          <Button type="submit" className="w-3/5 md:w-2/5">Entrar</Button>
         </div>
       </form>
     </Form >

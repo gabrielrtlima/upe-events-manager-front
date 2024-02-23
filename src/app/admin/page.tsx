@@ -4,10 +4,10 @@ import { ListEvents } from "@/components/ListEvents";
 export default function DashboardAdmin() {
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <div className="flex w-4/5 justify-end py-2">
+      <div className="flex w-9/12 justify-end py-2 sm:w-3/5">
         <CreateEventDialog />
       </div>
-      <div className="w-4/5 bg-zinc-100 rounded border ">
+      <div className="w-9/12 gg-zinc-100 rounded border px-4 sm:w-3/5">
         <ListEvents />
       </div>
 
