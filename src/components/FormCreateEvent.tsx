@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { format } from "date-fns"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 import {
   Form,
@@ -23,8 +23,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
   name: z.string({
@@ -36,25 +36,29 @@ const formSchema = z.object({
   finalDate: z.date({
     required_error: "Data final é obrigatória",
   }),
-})
+});
 
 type FormCreateEventProps = {
-  onSubmit: (data: z.infer<typeof formSchema>) => void
-}
+  onSubmit: (data: z.infer<typeof formSchema>) => void;
+};
 
 export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-  })
+  });
 
   function handleSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data)
-    onSubmit(data)
+    console.log(data);
+    onSubmit(data);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 h-3/5" id="create-event-form">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-6 h-3/5"
+        id="create-event-form"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -64,9 +68,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>
-              <FormDescription>
-                Insira o nome do evento
-              </FormDescription>
+              <FormDescription>Insira o nome do evento</FormDescription>
               <FormMessage className="h-5" />
             </FormItem>
           )}
@@ -86,7 +88,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                         variant={"outline"}
                         className={cn(
                           "w-[200px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -104,8 +106,8 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) => {
-                        const finalDate = form.getValues('finalDate')
-                        return date > finalDate
+                        const finalDate = form.getValues("finalDate");
+                        return date > finalDate;
                       }}
                       initialFocus
                     />
@@ -132,7 +134,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                         variant={"outline"}
                         className={cn(
                           "w-[200px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -150,16 +152,14 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) => {
-                        const initialDate = form.getValues('initialDate')
-                        return date < initialDate
+                        const initialDate = form.getValues("initialDate");
+                        return date < initialDate;
                       }}
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
-                <FormDescription>
-                  Insira a data final do evento
-                </FormDescription>
+                <FormDescription>Insira a data final do evento</FormDescription>
                 <FormMessage className="h-5" />
               </FormItem>
             )}
@@ -167,5 +167,5 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
         </div>
       </form>
     </Form>
-  )
+  );
 }
