@@ -26,13 +26,13 @@ import {
 
 import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { ReactNode, useState } from "react";
-import { FormSendPDF } from "./FormSendPDF";
+import { FormSendZip } from "./FormSendZip";
 
 export function CreateEventDialog() {
   const [step, setStep] = useState(1);
   const [openAlertCreateEvent, setOpenAlertCreateEvent] = useState(false);
 
-  const forms = ["create-event-form", "form-send-pdf", "form-send-csv"];
+  const forms = ["create-event-form", "form-send-zip", "form-send-csv"];
 
   const handleSubmit = () => {
     setStep(step + 1);
@@ -40,7 +40,7 @@ export function CreateEventDialog() {
 
   const formComponents = [
     <FormCreateEvent onSubmit={handleSubmit} />,
-    <FormSendPDF onSubmit={handleSubmit} />,
+    <FormSendZip onSubmit={handleSubmit} />,
     <FuncTeste />,
   ];
 
@@ -51,7 +51,13 @@ export function CreateEventDialog() {
       </DialogTrigger>
       <DialogContent className="flex justify-between w-screen h-[450px] flex-col">
         <DialogHeader>
-          <DialogTitle>Criar novo evento</DialogTitle>
+          <DialogTitle>
+            {step == 1
+              ? "Criar evento"
+              : step == 2
+                ? "Enviar arquivo ZIP"
+                : "Enviar aquivo CSV"}
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         {formComponents[step - 1]}
