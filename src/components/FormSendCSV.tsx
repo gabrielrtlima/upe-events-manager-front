@@ -1,27 +1,25 @@
+
 import { FilePlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { useToast } from "./ui/use-toast";
 
-type FormSendZipProps = {
+type FormSendCSVProps = {
   onSubmit: (data: any) => void;
-  extension: string;
   application: string;
+  extension: string;
   formId: string;
   endpoint: string;
-  file: File | undefined;
-  setFile: (file: File | undefined) => void;
 };
 
 export function FormSendZip({
   onSubmit,
-  extension,
-  setFile,
-  formId,
   application,
-  file,
+  extension,
+  formId,
   endpoint,
-}: FormSendZipProps) {
+}: FormSendCSVProps) {
+  const [file, setFile] = useState<File>();
   const { toast } = useToast();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -29,7 +27,6 @@ export function FormSendZip({
   }
 
   function onDrop(acceptedFiles: File[]) {
-    console.log(acceptedFiles);
     if (acceptedFiles.length > 1) {
       toast({
         variant: "destructive",
@@ -39,7 +36,7 @@ export function FormSendZip({
       return;
     }
 
-    if (acceptedFiles[0].type !== `${application}`) {
+    if (acceptedFiles[0].type !== application) {
       toast({
         variant: "destructive",
         title: "Erro ao enviar arquivo",
@@ -56,7 +53,7 @@ export function FormSendZip({
   }
 
   return (
-    <form onSubmit={handleSubmit} id={`form-send-${formId}`}>
+    <form onSubmit={handleSubmit} id="form-send-zip">
       <Dropzone onDrop={(acceptedFiles) => onDrop(acceptedFiles)}>
         {({ getRootProps, getInputProps }) => (
           <section
@@ -69,8 +66,8 @@ export function FormSendZip({
               <FilePlusIcon width={64} height={64} />
               <input {...getInputProps()} />
               {file == undefined
-                ? `Arraste o arquivo ${extension} ou clique aqui para selecionar`
-                : <span className="flex m-4 auto text-center text-red-400">{"Arquivo selecionado: " + file.name}</span>}
+                ? "Arraste o arquivo .zip ou clique aqui para selecionar"
+                : "Arquivo selecionado: " + file.name}
             </div>
           </section>
         )}

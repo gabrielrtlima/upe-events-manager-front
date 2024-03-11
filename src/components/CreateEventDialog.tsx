@@ -31,6 +31,9 @@ import { FormSendZip } from "./FormSendZip";
 export function CreateEventDialog() {
   const [step, setStep] = useState(1);
   const [openAlertCreateEvent, setOpenAlertCreateEvent] = useState(false);
+  const [eventId, setEventId] = useState("");
+  const [fileZip, setFileZip] = useState<File>();
+  const [fileCsv, setFileCsv] = useState<File>();
 
   const forms = ["create-event-form", "form-send-zip", "form-send-csv"];
 
@@ -40,8 +43,24 @@ export function CreateEventDialog() {
 
   const formComponents = [
     <FormCreateEvent onSubmit={handleSubmit} />,
-    <FormSendZip onSubmit={handleSubmit} />,
-    <FuncTeste />,
+    <FormSendZip
+      file={fileZip}
+      setFile={setFileZip}
+      onSubmit={handleSubmit}
+      formId="zip"
+      extension="zip"
+      application="application/zip"
+      endpoint={`/${eventId}/merged-papers`}
+    />,
+    <FormSendZip
+      file={fileCsv}
+      setFile={setFileCsv}
+      onSubmit={handleSubmit}
+      application="text/csv"
+      formId="csv"
+      extension="csv"
+      endpoint={`/${eventId}/merged-papers`}
+    />,
   ];
 
   return (
