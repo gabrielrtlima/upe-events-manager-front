@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
@@ -25,31 +24,76 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "./ui/use-toast";
 
 const formSchema = z.object({
   name: z.string({
     required_error: "Nome é obrigatório",
   }),
-  initialDate: z.date({
-    required_error: "Data inicial é obrigatória",
-  }),
-  finalDate: z.date({
-    required_error: "Data final é obrigatória",
-  }),
+  initial_date: z
+    .date({
+      required_error: "Data inicial é obrigatória",
+    })
+    .transform((data) => {
+      if (data) {
+        return format(data, "dd-MM-yyyy");
+      }
+    }),
+  final_date: z
+    .date({
+      required_error: "Data final é obrigatória",
+    })
+    .transform((data) => {
+      if (data) {
+        return format(data, "dd-MM-yyyy");
+      }
+    }),
 });
 
 type FormCreateEventProps = {
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  setStep: (step: number) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  setEventId: (eventId: number) => void;
 };
 
-export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
+export function FormCreateEvent({
+  setStep,
+  setIsLoading,
+  setEventId,
+}: FormCreateEventProps) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function handleSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
-    onSubmit(data);
+  async function handleSubmit(data: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    await fetch(process.env.NEXT_PUBLIC_API_URL + "/events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then(async (response) => {
+      if (response.ok) {
+        const res = await response.json();
+        toast({
+          variant: "default",
+          title: "Evento criado com sucesso",
+          description: "O evento foi criado com sucesso",
+        });
+        setEventId(res.id);
+        setIsLoading(false);
+        setStep(2);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Erro ao criar evento",
+          description: "Não foi possível criar o evento",
+        });
+        setIsLoading(false);
+      }
+    });
   }
 
   return (
@@ -77,7 +121,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
         <div className="flex justify-between">
           <FormField
             control={form.control}
-            name="initialDate"
+            name="initial_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Data inicial</FormLabel>
@@ -106,7 +150,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) => {
-                        const finalDate = form.getValues("finalDate");
+                        const finalDate = form.getValues("final_date");
                         return date > finalDate;
                       }}
                       initialFocus
@@ -123,7 +167,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
 
           <FormField
             control={form.control}
-            name="finalDate"
+            name="final_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Data final</FormLabel>
@@ -152,7 +196,7 @@ export function FormCreateEvent({ onSubmit }: FormCreateEventProps) {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) => {
-                        const initialDate = form.getValues("initialDate");
+                        const initialDate = form.getValues("initial_date");
                         return date < initialDate;
                       }}
                       initialFocus

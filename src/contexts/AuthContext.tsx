@@ -1,14 +1,19 @@
-"use client"
-import { useRouter } from 'next/navigation';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import Cookies from 'js-cookie';
-import Router from 'next/router';
-import { redirect } from 'next/navigation';
+"use client";
+import { useRouter } from "next/navigation";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import Cookies from "js-cookie";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: (user: any, token: string) => void;
   logout: () => void;
+  getToken: () => string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,22 +23,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    // Verifica se existe um token salvo ao carregar o app
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     if (token) {
       setIsLoggedIn(true);
     }
   }, []);
 
   const login = (user: any, token: string) => {
-    Cookies.set('token', token);
-    Cookies.set('user', JSON.stringify(user));
-    return router.push('/admin');
+    Cookies.set("token", token);
+    Cookies.set("user", JSON.stringify(user));
+    return window.location.replace("/admin");
+  };
+
+  const getToken = () => {
+    return Cookies.get("token");
   };
 
   const logout = () => {
-    Cookies.remove('token');
+    Cookies.remove("token");
     setIsLoggedIn(false);
+    return window.location.replace("/");
   };
 
   return (
@@ -46,8 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
-
